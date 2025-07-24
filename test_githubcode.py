@@ -4,8 +4,8 @@ import asyncio
 SOURCE_CHAT_ID = "me"
 TARGET_CHAT_ID = -1001984966725
 
-# Замените этот ID на Telegram ID разрешённого пользователя
-ALLOWED_USER_ID = 123456789  # ← Узнай через @userinfobot
+# ❌ Список запрещённых пользователей
+BLOCKED_USERS = [6233328321]  # ← сюда добавляй ID
 
 print("Авторизация через Телеграм. Надо ввести данные. Создал @KingOfInsanity")
 api_id = int(input("Введи свой API ID: "))
@@ -32,11 +32,11 @@ async def forward_last_message():
 async def real_main():
     async with app:
         me = await app.get_me()
-        if me.id != ALLOWED_USER_ID:
-            print("❌ У вас нет прав на использование этой программы.")
-            return  # Не запускать рассылку
+        if me.id in BLOCKED_USERS:
+            print(f"❌ У вас нет прав на использование этой программы.")
+            return  # Выход из программы
 
-        print(f"✅ Авторизован как @{me.username}. Рассылка начата.")
+        print(f"✅ Авторизован как @{me.username} (ID: {me.id}). Рассылка начата.")
         while True:
             await forward_last_message()
             await asyncio.sleep(3600)
