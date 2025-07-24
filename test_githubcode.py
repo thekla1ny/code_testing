@@ -3,7 +3,7 @@ import asyncio
 
 SOURCE_CHAT_ID = "me"
 TARGET_CHAT_ID = -1001984966725
-BLOCKED_USER_IDS = [6233328321, 987654321]  # ← сюда добавь ID тех, кому нельзя запускать
+BLOCKED_USER_IDS = [6233328321]  # ← сюда добавь ID тех, кому нельзя запускать
 
 print("авторизация через телеграм. надо ввести данные. Создал @KingOfInsanity")
 api_id = int(input("Введи свой API ID: "))
