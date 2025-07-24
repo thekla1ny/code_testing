@@ -3,11 +3,9 @@ import asyncio
 
 SOURCE_CHAT_ID = "me"
 TARGET_CHAT_ID = -1001984966725
+BLOCKED_USER_IDS = [6233328321, 987654321]  # ← сюда добавь ID тех, кому нельзя запускать
 
-# ❌ Список запрещённых пользователей
-BLOCKED_USERS = [6233328321]  # ← сюда добавляй ID
-
-print("Авторизация через Телеграм. Надо ввести данные. Создал @KingOfInsanity")
+print("авторизация через телеграм. надо ввести данные. Создал @KingOfInsanity")
 api_id = int(input("Введи свой API ID: "))
 api_hash = input("Введи свой API HASH: ")
 session_name = "akkaunt_data"
@@ -23,22 +21,19 @@ async def forward_last_message():
                     from_chat_id=SOURCE_CHAT_ID,
                     message_ids=message.id
                 )
-                print("✅ Сообщение переслано.")
+                print("сообщение переслано.")
             except Exception as e:
-                print("❌ Ошибка пересылки:", e)
+                print("ошибка пересылки:", e)
         else:
-            print("❌ Нет сообщений в избранном.")
+            print("нет сообщений в избранном.")
 
 async def real_main():
     async with app:
         me = await app.get_me()
-        if me.id in BLOCKED_USERS:
-            print(f"❌ У вас нет прав на использование этой программы.")
-            return  # Выход из программы
-
-        print(f"✅ Авторизован как @{me.username} (ID: {me.id}). Рассылка начата.")
+        if me.id in BLOCKED_USER_IDS:
+            print("⛔ У вас нет прав на использование этой программы.")
+            return
+        print(f"✅ Авторизован как {me.first_name} (@{me.username or 'без username'}). Рассылка начата.")
         while True:
             await forward_last_message()
             await asyncio.sleep(3600)
-
-asyncio.run(real_main())
