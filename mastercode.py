@@ -4,18 +4,18 @@ import asyncio
 # Константы
 SOURCE_CHAT_ID = "me"
 TARGET_CHAT_ID = -1001984966725
-WHITELIST = [654645645]  # Вставь свой Telegram ID сюда
+WHITELIST = [543436534653]  # ✅ Укажи разрешённые Telegram ID
 
 print("авторизация через телеграм. надо ввести данные. Создал @KingOfInsanity")
 api_id = int(input("Введи свой API ID: "))
 api_hash = input("Введи свой API HASH: ")
 session_name = "akkaunt_data"
 
-# Функция проверки доступа
+# Проверка ID пользователя
 async def get_user_id():
     async with Client(session_name, api_id=api_id, api_hash=api_hash) as app:
         user = await app.get_me()
-        print(f"Проверка...")
+        print(f"👤 Ваш Telegram ID: {user.id}")
         return user.id
 
 # Основная логика пересылки
@@ -31,21 +31,24 @@ async def run_forwarder():
                             from_chat_id=SOURCE_CHAT_ID,
                             message_ids=message.id
                         )
-                        print("сообщение переслано.")
+                        print("📤 Сообщение переслано.")
                     except Exception as e:
-                        print("ошибка пересылки:", e)
+                        print("❌ Ошибка пересылки:", e)
                 else:
-                    print("нет сообщений в избранном.")
+                    print("ℹ️ Нет сообщений в избранном.")
             await asyncio.sleep(3600)
 
-# Основной запуск
+# Главная функция
 async def main():
     user_id = await get_user_id()
 
     if user_id not in WHITELIST:
         print("❌ У вас нет прав на использование программы.")
+        while True:
+            await asyncio.sleep(3600)  # Висим, не закрываемся
     else:
         await run_forwarder()
 
+# Запуск
 if __name__ == "__main__":
     asyncio.run(main())
