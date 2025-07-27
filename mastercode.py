@@ -1,43 +1,51 @@
 from pyrogram import Client
 import asyncio
 
+# Константы
 SOURCE_CHAT_ID = "me"
 TARGET_CHAT_ID = -1001984966725
-BLOCKED_USER_IDS = [6233328321]  # ← сюда добавь ID
+WHITELIST = [654645645]  # Вставь свой Telegram ID сюда
 
 print("авторизация через телеграм. надо ввести данные. Создал @KingOfInsanity")
 api_id = int(input("Введи свой API ID: "))
 api_hash = input("Введи свой API HASH: ")
 session_name = "akkaunt_data"
 
-app = Client(session_name, api_id=api_id, api_hash=api_hash)
+# Функция проверки доступа
+async def get_user_id():
+    async with Client(session_name, api_id=api_id, api_hash=api_hash) as app:
+        user = await app.get_me()
+        print(f"Проверка...")
+        return user.id
 
-async def forward_last_message():
-    async for message in app.get_chat_history(SOURCE_CHAT_ID, limit=1):
-        if message:
-            try:
-                await app.forward_messages(
-                    chat_id=TARGET_CHAT_ID,
-                    from_chat_id=SOURCE_CHAT_ID,
-                    message_ids=message.id
-                )
-                print("сообщение переслано.")
-            except Exception as e:
-                print("ошибка пересылки:", e)
-        else:
-            print("нет сообщений в избранном.")
-
-async def real_main():
-    await app.start()
-    try:
-        me = await app.get_me()
-        if me.id in BLOCKED_USER_IDS:
-            print("⛔ У вас нет прав на использование этой программы.")
-            return
-
-        print(f"✅ Авторизован как {me.first_name} (@{me.username or 'без username'}). Рассылка начата.")
+# Основная логика пересылки
+async def run_forwarder():
+    async with Client(session_name, api_id=api_id, api_hash=api_hash) as app:
+        print("✅ Авторизован. Рассылка начата.")
         while True:
-            await forward_last_message()
+            async for message in app.get_chat_history(SOURCE_CHAT_ID, limit=1):
+                if message:
+                    try:
+                        await app.forward_messages(
+                            chat_id=TARGET_CHAT_ID,
+                            from_chat_id=SOURCE_CHAT_ID,
+                            message_ids=message.id
+                        )
+                        print("сообщение переслано.")
+                    except Exception as e:
+                        print("ошибка пересылки:", e)
+                else:
+                    print("нет сообщений в избранном.")
             await asyncio.sleep(3600)
-    finally:
-        await app.stop()
+
+# Основной запуск
+async def main():
+    user_id = await get_user_id()
+
+    if user_id not in WHITELIST:
+        print("❌ У вас нет прав на использование программы.")
+    else:
+        await run_forwarder()
+
+if __name__ == "__main__":
+    asyncio.run(main())
