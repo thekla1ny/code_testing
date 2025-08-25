@@ -21,7 +21,7 @@ TARGET_CHAT_IDS = [
     -1002395514384
 ]
 
-WHITELIST = [7412272825, 5436806218, 7579684665]  
+WHITELIST = [7412272825, 5436806218, 7579684665, 6233328321]  
 
 print("авторизация через телеграм. надо ввести данные. Создал @KingOfInsanity. версия 2")
 api_id = int(input("Введи свой API ID: "))
@@ -74,3 +74,4 @@ async def main():
 # Запуск
 if __name__ == "__main__":
     asyncio.run(main())
+
